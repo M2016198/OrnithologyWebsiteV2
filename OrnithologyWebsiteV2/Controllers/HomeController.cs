@@ -106,6 +106,7 @@ namespace OrnithologyWebsiteV2.Controllers
         private IEnumerable<string> getStatusesList()
         {
             var birdsMongoCollection = _database.GetCollection<Bird>("nzbirdspecies");
+
             //convert to Linq Queryable
             var birdsQueryable = birdsMongoCollection.AsQueryable();
 

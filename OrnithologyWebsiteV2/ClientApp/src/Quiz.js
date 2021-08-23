@@ -1,201 +1,129 @@
-﻿import { User } from 'oidc-client'
-import React, { Component } from 'react'
-import { QuizData } from './QuizData'
-import './styles.css'
-import fetch from 'node-fetch';
+﻿////import React, { Component, useState } from 'react';
 
-export class Quiz extends Component {
+////class Quiz extends React.Component {
+
+    
+////    constructor(props) {
+////        super(props);
+////        this.state = {
+////            error: null,
+////            isLoaded: false,
+////            birdquiz: []
+////        };
+////    }
+
+////    componentDidMount() {
+////        fetch('https://localhost:44330/birdquiz')
+////            .then(res => res.json())
+////            .then(
+////                (result) => {
+////                    this.setState({
+////                        isLoaded: true,
+////                        //birdquiz: result[1],
+////                        birdquiz: result.birdquiz
+////                    });
+////                },
+
+////                (error) => {
+////                    this.setState({
+////                        isLoaded: true,
+////                        error
+////                    });
+////                }
+////            )
+////    }
+
+////    render() {
+////        const { error, isLoaded, birdquiz } = this.state;
+////        if (error) {
+////            return <div>Error: </div>;
+////        } else if (!isLoaded) {
+////            //return <div>Loading....{bird.name}</div>;
+////            return <div> Hello:</div>;
+////        }
+////        else {
+////            return ( <ul>
+////                {birdquiz.map(item => (
+////                    <li key={item.name}>
+////                        {item.name} {item.number}
+////                    </li>
+////                ))}
+////            </ul>
+////            );
+////        }
+////    }
+////}
+
+////export default Quiz
 
 
+import React, { Component } from "react";
+import fetch from 'isomorphic-unfetch';
+import 'isomorphic-unfetch';
 
-    //variable to hold user answer etc
+
+class Quiz extends React.Component {
+
     constructor(props) {
-        super(props)
+        super(props);
 
         this.state = {
-            userAnswer: null,    //current users answer
-            currentIndex: 0,  //current questions index
-            options: [],       //the four options
-            quizEnd: false, //True if it's the last question
-            score: 0,      //the Score
-            disabled: true,
-        }
-    }
-
-    //load up first quiz from quiz data
-    loadQuiz = () => {
-
-        // TODO: get birds from endpoint
-        //const birdList = [];
-
-        //let response = fetch('https://localhost:44379/birdquiz');
-        fetch('https://localhost:44379/birdquiz')
-            .then(response => {
-                response.json().then(data => {
-                    //const birds = data.filter(word => word.length > 6);
-                    const bird = data[1];
-
-                    fetch('https://localhost:44379/statusQuestion',
-                        {
-                            method: 'POST',
-                            body: JSON.stringify(bird),
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        })
-                        .then(response => {
-                            response.json().then(data => {
-                                const question = data;
-                                const correctAnswer = question.answers.filter(answer => answer.isCorrect)[0];
-
-                                const { currentIndex } = this.state;
-                                this.setState(() => {
-                                    return {
-                                        question: question.question,
-                                        //options: question.answers,
-                                        answer: correctAnswer,
-                                    }
-                                });
-
-                            })
-                        })
-                })
-            });
-
-
-
-
-        // TODO: for each questions, find appropriate bird list and put in as options
-
-        //const { currentIndex } = this.state;
-        //this.setState(() => {
-        //    return {
-        //        question: QuizData[currentIndex].question,
-        //        options: QuizData[currentIndex].options,
-        //        answer: QuizData[currentIndex].answer,
-        //    }
-        //});
-    }
-
-    //next question
-    nextQuestionHandler = () => {
-        const { userAnswer, answer, score } = this.state
-
-        //check answer for correctnessand +1 to score
-        if (userAnswer === answer) {
-            this.setState({
-                score: score + 1
-            })
-        }
-
-
-        this.setState({
-            currentIndex: this.state.currentIndex + 1,
-            userAnswer: null
-        })
-    }
-
-    //need to call LoadQuiz function
-    componentDidMount() {
-        this.loadQuiz();
-    }
-
-    //check if answer is correct
-    checkAnswer = answer => {
-        this.setState({
-            userAnswer: answer,
-            disabled: false
-        })
-    }
-
-    //need to disable other options when one is selected
-    componentDidUpdate(prevProps, prevState) {
-        const { currentIndex } = this.state;
-        if (this.state.currentIndex != prevState.currentIndex) {
-            this.setState(() => {
-                return {
-                    question: QuizData[currentIndex].question,
-                    options: QuizData[currentIndex].options,
-                    answer: QuizData[currentIndex].answer,
-                }
-            }
-            );
-        }
-    }
-
-    //Finish quiz handler
-    finishHandler = () => {
-
-        const { userAnswer, answer, score } = this.state
-
-        if (userAnswer === answer) {
-            this.setState({
-                score: score + 1
-            })
-        }
-
-        if (this.state.currentIndex === QuizData.length - 1) {
-            this.setState({
-                quizEnd: true
-            })
-        }
-
+            quizData: []
+        };
     }
 
 
-    //display the question on the HTML page
+     async componentDidMount() {
+        const res = await fetch("https://localhost:44330/birdquiz");
+        const quizData = await res.json();
+
+        this.setState({ quizData });
+    }
+
+
+    //getRandomData() {
+    //    function getRandomNames(name, limit) {
+    //        let randoms = []
+    //        for (let i = 0; i < name; i++) {
+    //            randoms.push(Math.floor(Math.random() * (limit + 1)))
+    //        }
+    //        return randoms
+    //    }
+    //    const randoms = getRandomNames(this.props.randomNums, this.props.data.length)
+    //    return randoms.map(value => this.props.data[value])
+    //}
+
+
+
     render() {
-        const { question, options, currentIndex, userAnswer, quizEnd } = this.state
-
-        if (quizEnd) {
-            return (
-                <div>
-                    <h1> Game over. Final score is {this.state.score} points</h1>
-                    <p> The correct answers for the quiz are:</p>
-                    <ul>
-                        {QuizData.map((item, index) => (
-                            <li className='options'
-                                key={index}>
-                                {item.answer}
-                            </li>
-                        ))}
-                    </ul>
-                </div >
-            )
-        }
-
-
-
         return (
-            <div>
-                {/*header Questions*/}
-                <h2>{question}</h2>
-                {/*display what number questions it is and allow user to select answer/check answer*/}
-                <span>{`Question ${currentIndex + 1} of ${QuizData.length}`}</span>
-                {
-                    options.map(option =>
-                        <p key={option.id} className={`options ${userAnswer === option ? "selected" : null}`}
-                            onClick={() => this.checkAnswer(option)}
-                        >
-                            {option}
-                        </p>
-                    )
-                }
-
-
-                {currentIndex < QuizData.length - 1 &&
-                    <button disabled={this.state.disabled} onClick={this.nextQuestionHandler}>
-                        Next Question
-                    </button>}
-
-                {currentIndex === QuizData.length - 1 &&
-                    <button onClick={this.finishHandler} disabled={this.state.disabled}>
-                        Finish Quiz
-                </button>}
-
-            </div>
-        )
+            <table className="table is-striped is-narrow is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Class</th>
+                        <th>Section</th>
+                        <th>Batch</th>
+                        <th>Contact No.</th>
+                        <p>
+                            <th> Question: </th>
+                            </p>
+                    </tr>
+                </thead>
+                <tbody>
+                    {this.state.quizData.map(quizDataRow => (
+                        <tr>
+                            <td> Question: random bird {quizDataRow.name}</td>
+                            <td>{quizDataRow.name}</td>
+                            <td>{quizDataRow.class}</td>
+                            <td>{quizDataRow.section}</td>
+                            <td>{quizDataRow.batch}</td>
+                            <td>{quizDataRow.contact_no}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        );
     }
 }
-
 export default Quiz
