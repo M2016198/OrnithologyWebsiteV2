@@ -60,6 +60,11 @@
 import React, { Component } from "react";
 import fetch from 'isomorphic-unfetch';
 import 'isomorphic-unfetch';
+//import React from 'react';
+import Select from 'react-select';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
 
 
 class Quiz extends React.Component {
@@ -68,62 +73,178 @@ class Quiz extends React.Component {
         super(props);
 
         this.state = {
-            quizData: []
+            birdData: [],
+            habitatsData: [],
+            questionData: []
         };
     }
 
 
-     async componentDidMount() {
-        const res = await fetch("https://localhost:44330/birdquiz");
-        const quizData = await res.json();
-
-        this.setState({ quizData });
+    async componentDidMount() {
+        const resbird = await fetch("https://localhost:44330/birdquiz");
+        const birdData = await resbird.json();
+        this.setState({ birdData });
     }
 
+    async componentDidMount1() {
+        const reshabitats = await fetch("https://localhost:44330/habitats");
+        const habitatsData = await reshabitats.json();
+        this.setState({habitatsData})
+    }
 
-    //getRandomData() {
-    //    function getRandomNames(name, limit) {
-    //        let randoms = []
-    //        for (let i = 0; i < name; i++) {
-    //            randoms.push(Math.floor(Math.random() * (limit + 1)))
-    //        }
-    //        return randoms
-    //    }
-    //    const randoms = getRandomNames(this.props.randomNums, this.props.data.length)
-    //    return randoms.map(value => this.props.data[value])
-    //}
+    async componentDidMount2() {
+        const resquestion = await fetch("https://localhost:44330/statusQuestion");
+        const questionData = await resquestion.json();
+        this.setState({ questionData })
+    }
+
+    //render() {
+    //    return (
+            //<div>
+            //    {
+            //        <div className="container">
+            //            <div className="row">
+            //                <div className="col-md-4"></div>
+            //                <div className="col-md-4">
+            //                    <Select>
+            //                    {this.state.habitatsData.map(habitatObject => (
+            //                        <option
+            //                            key={habitatObject.key}
+            //                            value={habitatObject.value}>
+            //                        </option>
+            //                    ))}
+            //                </Select>
+            //                </div>
+            //                <div className="col-md-4"></div>
+            //            </div>
+            //        </div>
+            //     }
+            //</div>
+
+
+
+
+        //    this.state.birdData.map(birdDatafromDatabase => (
+        //        <div className="container">
+        //            <div className="row">
+        //                <div className="col-md-4"></div>
+        //                <div className="col-md-4">
+        //                    <Select>
+        //                        {this.state.habitatsData.map(habitatObject => (
+        //                            <option
+        //                                key={indexedDB}
+        //                                value={habitatObject.value}>
+        //                            </option>
+        //                        ))}
+        //                    </Select>
+        //                </div>
+        //                <div className="col-md-4"></div>
+        //            </div>
+        //        </div>
+        //    )
+        //    )
+        //)
+
+
+
+        //this.state.birdData.map(birdDatafromDatabase => (
+        //    <><div className="container">
+        //        <div className="row">
+        //            <div className="col-md-4"></div>
+        //            <div className="col-md-4">
+        //                <Select>
+        //                    {this.state.habitatsData.map(habitatObject => (
+        //                        <option
+        //                            key={habitatObject.key}
+        //                            value={habitatObject.value}>
+        //                        </option>
+        //                    ))}
+        //                </Select>
+        //            </div>
+        //            <div className="col-md-4"></div>
+        //        </div>
+        //    </div>
+        //        <div>
+        //            <div> Question: random bird {birdDatafromDatabase.name}</div>
+        //            <div>{birdDatafromDatabase.order}</div>
+        //            <div>{birdDatafromDatabase.status}</div>
+        //            <div>{birdDatafromDatabase.habitat}</div>
+        //        </div></>
+        //)
+        //)
+
+        //);
+
+
+
+        //render() {
+        //    return (
+        //        <div>
+        //            {this.state.birdData.map(birdDatafromDatabase => (
+        //                <><div className="container">
+        //                        <div className="row">
+        //                            <div className="col-md-4"></div>
+        //                            <div className="col-md-4">
+        //                                <Select>
+        //                                    {this.state.habitatsData.map(habitatObject => (
+        //                                        <option>
+        //                                            key={birdDatafromDatabase._id}
+        //                                            value={habitatObject.value}
+        //                                        </option>
+        //                                    ))}
+        //                                </Select>
+        //                            </div>
+        //                            <div className="col-md-4"></div>
+        //                        </div>
+        //                    </div>
+
+        //                        <div>
+        //                            <div> Question: random bird {birdDatafromDatabase.name}</div>
+        //                            <div>{birdDatafromDatabase.name}</div>
+        //                            <div>{birdDatafromDatabase.class}</div>
+        //                            <div>{birdDatafromDatabase.section}</div>
+        //                            <div>{birdDatafromDatabase.batch}</div>
+        //                            <div>{birdDatafromDatabase.contact_no}</div>
+        //                        </div></>
+        //                ))}
+        //        </div>
+
+        //    );
+        //}
 
 
 
     render() {
+        const options = [
+            this.state.birdData.map(birdDatafromDatabase => (
+                <div>{birdDatafromDatabase.name}</div>
+            ))
+        ];
+        const defaultOption = options[0];
+        //const defaultQuestion = question[0];
+
         return (
-            <table className="table is-striped is-narrow is-fullwidth">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Class</th>
-                        <th>Section</th>
-                        <th>Batch</th>
-                        <th>Contact No.</th>
-                        <p>
-                            <th> Question: </th>
-                            </p>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.state.quizData.map(quizDataRow => (
-                        <tr>
-                            <td> Question: random bird {quizDataRow.name}</td>
-                            <td>{quizDataRow.name}</td>
-                            <td>{quizDataRow.class}</td>
-                            <td>{quizDataRow.section}</td>
-                            <td>{quizDataRow.batch}</td>
-                            <td>{quizDataRow.contact_no}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        );
+            <Dropdown options={options} onChange={this._onSelect} value={defaultOption} placeholder="Select an option" />
+            //<div>
+            //    Hello
+            //</div>
+            //<><div className="container">
+            //    <div className="row">
+            //        <div className="col-md-4"></div>
+            //        <div className="col-md-4">
+            //            <Select>
+            //                <option>
+            //                    "Hi"
+            //                    </option>
+            //            </Select>
+            //        </div>
+            //        <div className="col-md-4"></div>
+            //    </div>
+            //</div>
+            //</>
+        )
     }
 }
+
+
 export default Quiz

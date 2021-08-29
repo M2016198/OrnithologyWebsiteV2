@@ -50,9 +50,10 @@ namespace OrnithologyWebsiteV2.Controllers
 
             // get unique habitats and split by commas
             var habitatsList = birdsList.SelectMany(bird => bird.Habitat.Split(',').ToList().Select(habitat => habitat.Trim())).Distinct();
+            //var habitatsObjects = habitatsList.Select((habitat,i) => new { key = i + 1, value = habitat });
 
             //OK converts to JSON 
-            return Ok(birdsList);
+            return Ok(habitatsList);
         }
 
         [HttpGet("order")]
@@ -69,7 +70,7 @@ namespace OrnithologyWebsiteV2.Controllers
             var orderList = birdsList.Select(bird => bird.Order).Distinct();
 
             //OK converts to JSON 
-            return Ok(birdsList);
+            return Ok(orderList);
         }
 
         [HttpGet("status")]
