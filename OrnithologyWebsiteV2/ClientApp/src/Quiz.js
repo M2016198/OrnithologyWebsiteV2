@@ -75,7 +75,8 @@ class Quiz extends React.Component {
         this.state = {
             birdData: [],
             habitatsData: [],
-            questionData: []
+            questionData: [],
+            orderData: []
         };
     }
 
@@ -92,10 +93,16 @@ class Quiz extends React.Component {
         this.setState({habitatsData})
     }
 
+    //async componentDidMount2() {
+    //    const resquestion = await fetch("https://localhost:44330/statusQuestion");
+    //    const questionData = await resquestion.json();
+    //    this.setState({ questionData })
+    //}
+
     async componentDidMount2() {
-        const resquestion = await fetch("https://localhost:44330/statusQuestion");
-        const questionData = await resquestion.json();
-        this.setState({ questionData })
+        const resOrder = await fetch("https://localhost:44330/status");
+        const orderData = await resOrder.json();
+        this.setState({ orderData })
     }
 
     //render() {
@@ -217,14 +224,32 @@ class Quiz extends React.Component {
     render() {
         const options = [
             this.state.birdData.map(birdDatafromDatabase => (
-                <div>{birdDatafromDatabase.name}</div>
+                <div>{birdDatafromDatabase.status}</div>
             ))
         ];
+
+        const question = [
+            this.state.birdData.map(Question => (               
+                <div>What status is the following bird: {Question.name}</div>
+            ))
+        ];
+
+        const answersOrders = [
+            this.state.orderData.map(answOrder => (
+                <div>{answOrder}</div>
+            ))
+        ];
+
         const defaultOption = options[0];
-        //const defaultQuestion = question[0];
+        const defaultQuestion = question[0];
+        const answers = answersOrders[0];
+
+        var randomBird = defaultQuestion[Math.floor(Math.random() * defaultQuestion.length)];
+        //var orderListUniqueValues = defaultOption.Distinct();
 
         return (
-            <Dropdown options={options} onChange={this._onSelect} value={defaultOption} placeholder="Select an option" />
+            <><h1>Question: { randomBird }</h1>
+                <Dropdown options={answersOrders} onChange={this._onSelect} value={answers} placeholder="Select an option" /></>
             //<div>
             //    Hello
             //</div>
