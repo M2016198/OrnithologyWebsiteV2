@@ -2,7 +2,7 @@ var audioTrack = WaveSurfer.create({
     container: ".audio",
     waveColor: "white",
     progressColor: "green",
-    barWidth: 2,
+    barWidth: 1,
   });
   
   audioTrack.load('birdcall.wav');
