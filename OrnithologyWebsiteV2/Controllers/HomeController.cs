@@ -21,14 +21,26 @@ namespace OrnithologyWebsiteV2.Controllers
             _database = client.GetDatabase("nzbirds1");
         }
 
+        // GET: HomeController
+        [HttpGet("timsstuff")]
+        public ActionResult GetTimsStuff()
+        {
+            // Tims newly added code
+
+            //OK converts to JSON 
+            return Ok();
+        }
+
 
         // GET: HomeController
         [HttpGet("birdquiz")]
         public ActionResult Index()
         {
-            var birdsMongoCollection = _database.GetCollection<Bird>("nzbirdspecies");
+            // Tim being naughty and changing Marias code
+
+            var birdsMongoCollectionn = _database.GetCollection<Bird>("nzbirdspecies");
             //convert to Linq Queryable
-            var birdsQueryable = birdsMongoCollection.AsQueryable();
+            var birdsQueryable = birdsMongoCollectionn.AsQueryable();
 
             //convert to IList
             var birdsList = birdsQueryable.ToList();
