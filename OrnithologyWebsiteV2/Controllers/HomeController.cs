@@ -38,9 +38,9 @@ namespace OrnithologyWebsiteV2.Controllers
         {
             // Tim being naughty and changing Marias code
 
-            var birdsMongoCollectionn = _database.GetCollection<Bird>("nzbirdspecies");
+            var birdsMongoCollection = _database.GetCollection<Bird>("nzbirdspecies");
             //convert to Linq Queryable
-            var birdsQueryable = birdsMongoCollectionn.AsQueryable();
+            var birdsQueryable = birdsMongoCollection.AsQueryable();
 
             //convert to IList
             var birdsList = birdsQueryable.ToList();
